@@ -243,23 +243,54 @@ points:
   mirror:
     ref: matrix_inner_number
     distance: 2ks
+
 outlines:
-  raw:
+  debug_points:
     - what: rectangle
       where: true
-      size: [ks, kp]
-  regular_keys:
+      size: [6,0.01]
     - what: rectangle
-      where: [key_1u]
-      size: [kcw,kch]
-  one_and_half_keys:
+      where: true
+      size: [0.01,4]
+    - what: circle
+      where: true
+      radius: 0.4
+      adjust:
+        shift: [3,0]
+    - what: circle
+      where: true
+      radius: 0.4
+      adjust:
+        shift: [0,2]
+    - what: rectangle
+      where: [key]
+      size: [kx, ky]
+      operation: stack
     - what: rectangle
       where: [key_1_5u]
+      size: [kx, 1.5ky]
+      operation: stack
+    - what: rectangle
+      where: /key/
+      size: [kcow, kcoh]
+      operation: stack
+    - what: circle
+      where: [screw]
+      radius: 2
+      operation: stack
+  keycap_outlines:
+    - what: rectangle
+      fillet: 2
+      where: [key_1u]
+      size: [kcw, kch]
+    - what: rectangle
+      fillet: 2
+      where: [key_1_5u]
       size: [kcw, 1.5kch]
-  keys:
-    - name: regular_keys
-    - operation: add
-      name: one_and_half_keys
+  key_switch_cutouts:
+    - what: rectangle
+      where: [key]
+      size: [kcow, kcoh]
   board_left:
     - what: polygon
       operation: stack
@@ -294,60 +325,88 @@ outlines:
         - ref: mirror_matrix_inner_number
           shift: [.5ks, .5kp]
       fillet: 3
-  boards:
+  pcb:
     - name: board_left
     - operation: add
       name: board_right
-  promicro:
-    - what: rectangle
-      where: /pinkycluster_pinky/
-      size: [33,17]
-      adjust: 
-        shift: [-9, 0]
   combo:
-    - name: boards
+    - name: pcb
     - operation: subtract
-      name: keys
-    - operation: stack
-      name: promicro
+      name: keycap_outlines
+
 pcbs:
-  footprints:
-    choc_hotswap:
-      type: choc
-      nets:
-        from: =column_net
-        to: GND
-      params:
-        keycaps: true
-        reverse: true
-        hotswap: true
-    choc:
-      type: choc
-      anchor:
-        rotate: 180
-      nets:
-        from: =column_net
-        to: GND
-      params:
-        keycaps: true
-        reverse: true
-    trrs:
-      type: trrs
-    rotary:
-      type: rotary
-    promicro:
-      type: promicro
-  left:
-    outlines:
-      main:
-        outline: board_left
-    footprints:
+  _pcb_baseline:
+    footprints: &base_pcb_footprints
       choc_hotswap:
-        what: choc
-        where: true
-        params:
-          keycaps: true
-          reverse: false
-          hotswap: true
+        type: choc
+        where: [key]
+        nets:
           from: "{{column_net}}"
           to: "{{colrow}}"
+        params:
+          keycaps: true
+          hotswap: true
+        adjust:
+          rotate: switch_rotation
+      diode:
+        what: diode
+        where: [key]
+        params:
+          from: "{{colrow}}"
+          to: "{{row_net}}"
+        adjust:
+          shift: [horizontal_diode_shift, vertical_diode_shift]
+          rotate: 90 + diode_rotation
+      promicro:
+        what: promicro
+        where: pinkymatrix_outer_row
+        params:
+          orientation: down
+          RAW: {type: 'net', value: 'RAW'},
+          GND: {type: 'net', value: 'GND'},
+          RST: {type: 'net', value: 'RST'},
+          VCC: {type: 'net', value: 'VCC'},
+          P21: {type: 'net', value: 'P21'},
+          P20: {type: 'net', value: 'P20'},
+          P19: R5,
+          P18: R4,
+          P15: R3,
+          P14: R2,
+          P16: R1,
+          P10: R0,
+          P1: LED,
+          P0: DAT,
+          P2: RE_A,
+          P3: RE_C,
+          P4: C5,
+          P5: C4,
+          P6: C3,
+          P7: C2,
+          P8: C1,
+          P9: C0
+        adjust:
+          shift: [-9, -1.5]
+      trrs:
+        what: ceoloide/trrs_pj320a
+        where: matrix_inner_number
+        params:
+          SL: GND
+          R1: DAT
+          # R2: 
+          TP: VCC
+          side: B
+        adjust:
+          shift: [0.5 ks, -.5 kp]
+          rotate: 70
+  left:
+    footprints:
+      <<: *base_pcb_footprints
+      rotary:
+        what: ceoloide/rotary_encoder_ec11_ec12
+        params:
+          S1: "{{column_net}}"
+          S2: "{{colrow}}"
+          A: RE_A
+          B: GND
+          C: RE_C
+          
