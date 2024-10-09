@@ -4,6 +4,10 @@
 //    from: corresponds to pin 1
 //    to: corresponds to pin 2
 // Params
+//    hotswap: default is false
+//      if true, will include holes and pads for Kailh choc hotswap sockets
+//    reverse: default is false
+//      if true, will flip the footprint such that the pcb can be reversible
 //    keycaps: default is false
 //      if true, will add choc sized keycap box around the footprint
 // 
@@ -12,11 +16,11 @@
 module.exports = {
   params: {
     designator: 'S',
-    // hotswap: false,
-    // reverse: false,
+    hotswap: false,
+    reverse: false,
     keycaps: false,
-    // from: undefined,
-    // to: undefined
+    from: undefined,
+    to: undefined
   },
   body: p => {
     const standard = `
