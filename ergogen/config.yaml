@@ -335,47 +335,65 @@ outlines:
       name: keycap_outlines
 
 pcbs:
-  _pcb_baseline:
-    footprints: &base_pcb_footprints
+  left:
+    template: kicad8
+    outlines:
+      main:
+        outline: board_left
+    footprints:
       choc_hotswap:
-        type: choc
-        where: [key]
-        nets:
+        what: choc
+        where: [[-/mirror/, "key"]]
+        params:
           from: "{{column_net}}"
           to: "{{colrow}}"
-        params:
           keycaps: true
           hotswap: true
         adjust:
           rotate: switch_rotation
       diode:
-        what: diode
-        where: [key]
+        what: ceoloide/diode_tht_sod123
+        where: [[-/mirror/, "key"]]
         params:
           from: "{{colrow}}"
           to: "{{row_net}}"
         adjust:
           shift: [horizontal_diode_shift, vertical_diode_shift]
           rotate: 90 + diode_rotation
+      led:
+        what: ceoloide/led_sk6812mini-e
+        where: [[-/mirror/, "key"]]
+        params:
+          P1: VCC
+          P2: "{{key.led_next}}"
+          P3: GND
+          P4: "{{key.led_prev}}"
+          include_traces_vias: false
+          signal_trace_width: signal_trace_width
+          gnd_trace_width: gnd_trace_width
+          vcc_trace_width: pwr_trace_width
+        adjust:
+          shift: [led_pos_x, led_pos_y]
+          rotate: led_rotation
       promicro:
         what: promicro
-        where: pinkymatrix_outer_row
+        where: pinkymatrix_pinky_row
         params:
-          orientation: down
-          RAW: {type: 'net', value: 'RAW'},
-          GND: {type: 'net', value: 'GND'},
-          RST: {type: 'net', value: 'RST'},
-          VCC: {type: 'net', value: 'VCC'},
-          P21: {type: 'net', value: 'P21'},
-          P20: {type: 'net', value: 'P20'},
+          orientation: up
+          # RAW: {type: 'net', value: 'RAW'},
+          # GND: {type: 'net', value: 'GND'},
+          # RST: {type: 'net', value: 'RST'},
+          # VCC: {type: 'net', value: 'VCC'},
+          P21: LED,
+          # P20: {type: 'net', value: 'P20'},
           P19: R5,
           P18: R4,
           P15: R3,
           P14: R2,
           P16: R1,
           P10: R0,
-          P1: LED,
-          P0: DAT,
+          P1: DAT,
+          # P0: DAT_C,
           P2: RE_A,
           P3: RE_C,
           P4: C5,
@@ -385,28 +403,35 @@ pcbs:
           P8: C1,
           P9: C0
         adjust:
-          shift: [-9, -1.5]
+          shift: [-.5ks, -1]
       trrs:
-        what: ceoloide/trrs_pj320a
+        what: trrs
         where: matrix_inner_number
         params:
-          SL: GND
-          R1: DAT
-          # R2: 
-          TP: VCC
-          side: B
+          # SL: GND
+          # R1: DAT
+          # # R2: 
+          # TP: VCC
+          # side: 
+          A: VCC
+          B: VCC
+          C: DAT
+          D: GND 
+          reverse: true
+          symmetric: true
         adjust:
-          shift: [0.5 ks, -.5 kp]
-          rotate: 70
-  left:
-    footprints:
-      <<: *base_pcb_footprints
+          shift: [-.35 ks, .75 kp]
+          rotate: -14
       rotary:
-        what: ceoloide/rotary_encoder_ec11_ec12
-        params:
-          S1: "{{column_net}}"
-          S2: "{{colrow}}"
+        # what: ceoloide/rotary_encoder_ec11_ec12
+        # params:
+        #   S1: "{{column_net}}"
+        #   S2: "{{colrow}}"
+        what: rotary
+        where: [[-/mirror/, "rotary"]]
+        params: 
+          from: "{{column_net}}"
+          to: "{{colrow}}"
           A: RE_A
           B: GND
           C: RE_C
-          
