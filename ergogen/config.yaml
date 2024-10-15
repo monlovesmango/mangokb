@@ -17,7 +17,7 @@ units:
   kcoh: 13.8 # key cutout hole height (cherry, choc v2: 14, choc v1: 13.8)
   kcw: 17.5 # keycap width (cherry: 18, choc: 17.5)
   kch: 16.5 # keycap height (cherry: 18, choc: 16.5)
-  pcb_p: 1 # pcb padding
+  pcb_p: 2 # pcb padding
   led_pos_x: 0 # Led X position relative to the switch center
   led_pos_y: 4.7 # Led Y position relative to the switch center
   led_pos_y_mcu: 3.4 # Led Y position relative to the switch center under mcu
