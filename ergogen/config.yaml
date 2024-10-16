@@ -34,7 +34,7 @@ units:
   mcu_pos_x: .47ks - pcb_p
   mcu_pos_y: -1.3
   trrs_pos_x: -7
-  trrs_pos_y: 13 + pcb_p
+  trrs_pos_y: 13.3 + pcb_p
   trrs_rotation: 14.2
 
   hand_rotation: 0
@@ -76,6 +76,85 @@ points:
           key.column_net: C5
           rows:
             number.key:
+              led_prev: LED_25
+              led_next: LED_26
+            top.key:
+              led_prev: LED_26
+              led_next: LED_27
+            home.key:
+              led_prev: LED_27
+              led_next: LED_28
+            bottom.key:
+              led_prev: LED_28
+              led_next: LED_29
+        pinky:
+          key.stagger: .2ks
+          key.column_net: C4
+          rows:
+            number.key:
+              led_prev: LED_21
+              led_next: LED_22
+            top.key:
+              led_prev: LED_22
+              led_next: LED_23
+            home.key:
+              led_prev: LED_23
+              led_next: LED_24
+            bottom.key:
+              led_prev: LED_24
+              led_next: LED_25
+        ring:
+          key.stagger: .6ks
+          key.column_net: C3
+          rows:
+            number.key:
+              led_prev: LED_16
+              led_next: LED_17
+            top.key:
+              led_prev: LED_17
+              led_next: LED_18
+            home.key:
+              led_prev: LED_18
+              led_next: LED_19
+            bottom.key:
+              led_prev: LED_19
+              led_next: LED_20
+        middle:
+          key.stagger: .5ks
+          key.column_net: C2
+          rows:
+            number.key:
+              led_prev: LED_10
+              led_next: LED_11
+            top.key:
+              led_prev: LED_11
+              led_next: LED_12
+            home.key:
+              led_prev: LED_12
+              led_next: LED_13
+            bottom.key:
+              led_prev: LED_13
+              led_next: LED_14
+        index:
+          key.stagger: -.5ks
+          key.column_net: C1
+          rows:
+            number.key:
+              led_prev: LED_5
+              led_next: LED_6
+            top.key:
+              led_prev: LED_6
+              led_next: LED_7
+            home.key:
+              led_prev: LED_7
+              led_next: LED_8
+            bottom.key:
+              led_prev: LED_8
+              led_next: LED_9
+        inner:
+          key.column_net: C0
+          rows:
+            number.key:
               led_prev: LED
               led_next: LED_1
             top.key:
@@ -87,85 +166,6 @@ points:
             bottom.key:
               led_prev: LED_3
               led_next: LED_4
-        pinky:
-          key.stagger: .2ks
-          key.column_net: C4
-          rows:
-            number.key:
-              led_prev: LED_7
-              led_next: LED_8
-            top.key:
-              led_prev: LED_6
-              led_next: LED_7
-            home.key:
-              led_prev: LED_5
-              led_next: LED_6
-            bottom.key:
-              led_prev: LED_4
-              led_next: LED_5
-        ring:
-          key.stagger: .6ks
-          key.column_net: C3
-          rows:
-            number.key:
-              led_prev: LED_8
-              led_next: LED_9
-            top.key:
-              led_prev: LED_9
-              led_next: LED_10
-            home.key:
-              led_prev: LED_10
-              led_next: LED_11
-            bottom.key:
-              led_prev: LED_11
-              led_next: LED_12
-        middle:
-          key.stagger: .5ks
-          key.column_net: C2
-          rows:
-            number.key:
-              led_prev: LED_18
-              led_next: LED_19
-            top.key:
-              led_prev: LED_17
-              led_next: LED_18
-            home.key:
-              led_prev: LED_16
-              led_next: LED_17
-            bottom.key:
-              led_prev: LED_15
-              led_next: LED_16
-        index:
-          key.stagger: -.5ks
-          key.column_net: C1
-          rows:
-            number.key:
-              led_prev: LED_19
-              led_next: LED_20
-            top.key:
-              led_prev: LED_20
-              led_next: LED_21
-            home.key:
-              led_prev: LED_21
-              led_next: LED_22
-            bottom.key:
-              led_prev: LED_22
-              led_next: LED_23
-        inner:
-          key.column_net: C0
-          rows:
-            number.key:
-              led_prev: LED_28
-              led_next: LED_29
-            top.key:
-              led_prev: LED_27
-              led_next: LED_28
-            home.key:
-              led_prev: LED_26
-              led_next: LED_27
-            bottom.key:
-              led_prev: LED_25
-              led_next: LED_26
       rows:
         bottom:
           row_net: R1
@@ -191,24 +191,26 @@ points:
         ring:
           rows.thumb_r5.skip: true
           key.column_net: C3
-          rows.thumb_r0.key.led_prev: LED_12
-          rows.thumb_r0.key.led_next: LED_13
+          rows.thumb_r0.key:
+            led_prev: LED_20
+            led_next: LED_21
         middle:
           key.column_net: C2
           key.stagger: 1kp
           rows:
-            thumb_r5.key:
-              led_prev: LED_13
-              led_next: LED_14
             thumb_r0.key:
               led_prev: LED_14
               led_next: LED_15
+            thumb_r5.key:
+              led_prev: LED_15
+              led_next: LED_16
         index:
           rows.thumb_r5.skip: true
           key.column_net: C1
           key.stagger: -1kp
-          rows.thumb_r0.key.led_prev: LED_23
-          rows.thumb_r0.key.led_next: LED_24
+          rows.thumb_r0.key:
+            led_prev: LED_9
+            led_next: LED_10
         inner:
           rows.thumb_r5.skip: true
           key.adjust.shift: [0, .25kp]
@@ -217,8 +219,9 @@ points:
               - key
               - thumb_key
               - key_1_5u
-          rows.thumb_r0.key.led_prev: LED_24
-          rows.thumb_r0.key.led_next: LED_25
+          rows.thumb_r0.key:
+            led_prev: LED_4
+            led_next: LED_5
       rows:
         thumb_r5:
           row_net: R5
