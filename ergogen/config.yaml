@@ -17,7 +17,7 @@ units:
   kcoh: 13.8 # key cutout hole height (cherry, choc v2: 14, choc v1: 13.8)
   kcw: 17.5 # keycap width (cherry: 18, choc: 17.5)
   kch: 16.5 # keycap height (cherry: 18, choc: 16.5)
-  pcb_p: 1.8 # pcb padding
+  pcb_p: 1.4 # pcb padding
   pinky_stagger: .2kp
   ring_stagger: .6kp
   middle_stagger: .5kp
@@ -39,8 +39,8 @@ units:
   mcu_pos_x: .47ks - pcb_p
   mcu_pos_y: -1.3
   trrs_pos_x: -7
-  trrs_pos_y: 13 + pcb_p
-  trrs_rotation: -13
+  trrs_pos_y: 12.8 + pcb_p
+  trrs_rotation: -13.5
 
   hand_rotation: 0
 
