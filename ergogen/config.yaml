@@ -199,43 +199,43 @@ points:
         shift: [0, thumbmatrix_y_shift]
       columns:
         ring:
-          rows.thumb_r5.skip: true
+          rows.thumbR5.skip: true
           key.column_net: C3
-          rows.thumb_r0.key:
+          rows.thumbR0.key:
             led_prev: LED_20
             led_next: LED_21
         middle:
           key.column_net: C2
           key.stagger: 1kp
           rows:
-            thumb_r0.key:
+            thumbR0.key:
               led_prev: LED_14
               led_next: LED_15
-            thumb_r5.key:
+            thumbR5.key:
               led_prev: LED_15
               led_next: LED_16
         index:
-          rows.thumb_r5.skip: true
+          rows.thumbR5.skip: true
           key.column_net: C1
           key.stagger: -1kp
-          rows.thumb_r0.key:
+          rows.thumbR0.key:
             led_prev: LED_9
             led_next: LED_10
         inner:
-          rows.thumb_r5.skip: true
+          rows.thumbR5.skip: true
           key.adjust.shift: [0, .25kp]
           key.column_net: C0
           key.tags:
               - key
               - thumb_key
               - key_1_5u
-          rows.thumb_r0.key:
+          rows.thumbR0.key:
             led_prev: LED_4
             led_next: LED_5
       rows:
-        thumb_r5:
+        thumbR5:
           row_net: R5
-        thumb_r0:
+        thumbR0:
           row_net: R0
     # pinky cluster
     pinkymatrix:
@@ -269,31 +269,31 @@ points:
     # helper points
     hole_1:
       key.tags: 
-        - hole
+        - magnet_hole
       anchor:
         ref: matrix_ring_number
         shift: [0, top_holes_y_shift]
     hole_2:
       key.tags: 
-        - hole
+        - magnet_hole
       anchor:
         ref: matrix_index_number
         shift: [0, top_holes_y_shift - .5]
     hole_3:
       key.tags: 
-        - hole
+        - magnet_hole
       anchor:
         ref: matrix_index_bottom
         shift: [0, bottom_holes_y_shift]
     hole_4:
       key.tags: 
-        - hole
+        - magnet_hole
       anchor:
         ref: matrix_ring_bottom
         shift: [0, bottom_holes_y_shift]
     hole_5:
       key.tags: 
-        - hole
+        - magnet_hole
       anchor:
         ref: matrix_pinky_bottom
         shift: [0, hole5_y_shift]
@@ -353,9 +353,9 @@ outlines:
     - what: polygon
       operation: stack
       points:
-        - ref: thumbmatrix_inner_thumb_r0
+        - ref: thumbmatrix_inner_thumbR0
           shift: [.5ks+pcb_p, -.75kp-pcb_p]
-        - ref: thumbmatrix_ring_thumb_r0
+        - ref: thumbmatrix_ring_thumbR0
           shift: [-.5ks-pcb_p, -.5kp-pcb_p]
         - ref: matrix_outer_bottom
           shift: [-.5ks-pcb_p, -.5kp-pcb_p]
@@ -369,9 +369,9 @@ outlines:
     - what: polygon
       operation: stack
       points:
-        - ref: mirror_thumbmatrix_inner_thumb_r0
+        - ref: mirror_thumbmatrix_inner_thumbR0
           shift: [.5ks+pcb_p, -.75kp-pcb_p]
-        - ref: mirror_thumbmatrix_ring_thumb_r0
+        - ref: mirror_thumbmatrix_ring_thumbR0
           shift: [-.5ks-pcb_p, -.5kp-pcb_p]
         - ref: mirror_matrix_outer_bottom
           shift: [-.5ks-pcb_p, -.5kp-pcb_p]
@@ -543,6 +543,15 @@ pcbs:
           C: RE_C
         adjust:
           rotate: 90
-      hole:
+      magnet_hole:
         what: monlovesmango/pcb_hole
-        where: [[-/mirror/, "hole"]]
+        where: [[-/mirror/, "magnet_hole"]]
+        params:
+          diam: 5.4
+      stablizer_hole:
+        what: monlovesmango/pcb_hole
+        where: [[-/mirror/, /number/, -/inner/],[-/mirror/, /top/, -/inner/],[-/mirror/, /home/, -/inner/],[-/mirror/, /middle_bottom/]]
+        params:
+          diam: 1.6
+        adjust:
+          shift: [.5ks - 1.1, -.5kp + 1.1]
