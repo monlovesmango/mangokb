@@ -505,7 +505,7 @@ pcbs:
         adjust:
           shift: [mcu_pos_x, mcu_pos_y]
       trrs:
-        what: monlovesmango/trrs_pj320a
+        what: ceoloide/trrs_pj320a
         # what: trrs
         where: matrix_inner_number
         params:
