@@ -90,13 +90,14 @@ module.exports = {
     side: 'F',
     reversible: false,
     include_momentary_switch_pads: true,
-    include_plate_hole_marking: false,
+    include_plate_hole_marking: true,
     include_silkscreen: true,
     include_mounting_holes: true,
-    include_plated_mounting_holes: true,
-    mounting_holes_position: 5.6,
-    mounting_holes_height: 2.3,
-    mounting_holes_width: 1.5,
+    include_plated_mounting_holes: false,
+    mounting_holes_position: 2.25,
+    mounting_holes_height: 1.5,
+    mounting_hole_left_width: 1.1,
+    mounting_hole_right_width: 1.3,
     encoder_pads_position: 7.5,
     encoder_3dmodel_filename: '',
     encoder_3dmodel_xyz_offset: [0, 0, 0],
@@ -125,28 +126,28 @@ module.exports = {
       (effects (font (size 1 1) (thickness 0.15))${p.side == 'F' ? ' (justify mirror)' : ''})
     )`:''}
     (attr through_hole)
-    (pad "A" thru_hole oval (at 2.5 ${p.encoder_pads_position} ${p.r}) (size 1.6 1.1) (drill oval 1 0.5) (layers "*.Cu" "F.Mask") ${p.A})
+    (pad "A" thru_hole oval (at 2.4 ${p.encoder_pads_position} ${p.r}) (size 1.6 1.1) (drill oval 1 0.5) (layers "*.Cu" "F.Mask") ${p.A})
     (pad "B" thru_hole oval (at 0 ${p.encoder_pads_position} ${p.r}) (size 1.6 1.1) (drill oval 1 0.5) (layers "*.Cu" "F.Mask") ${p.B})
-    (pad "C" thru_hole oval (at -2.5 ${p.encoder_pads_position} ${p.r}) (size 1.6 1.1) (drill oval 1 0.5) (layers "*.Cu" "F.Mask") ${p.C})
+    (pad "C" thru_hole oval (at -2.4 ${p.encoder_pads_position} ${p.r}) (size 1.6 1.1) (drill oval 1 0.5) (layers "*.Cu" "F.Mask") ${p.C})
     `
     const momentary_switch_pads = `
-    (pad "S1" thru_hole oval (at -2.5 -7 ${p.r}) (size 1.6 1.1) (drill oval 1 0.5) (layers "*.Cu" "F.Mask") ${p.S1})
-    (pad "S2" thru_hole oval (at 2.5 -7 ${p.r}) (size 1.6 1.1) (drill oval 1 0.5) (layers "*.Cu" "F.Mask") ${p.S2})
+    (pad "S1" thru_hole oval (at -2.4 -${p.encoder_pads_position} ${p.r}) (size 1.6 1.1) (drill oval 1 0.5) (layers "*.Cu" "F.Mask") ${p.S1})
+    (pad "S2" thru_hole oval (at 2.4 -${p.encoder_pads_position} ${p.r}) (size 1.6 1.1) (drill oval 1 0.5) (layers "*.Cu" "F.Mask") ${p.S2})
     `
     const plated_mp = `
     (pad "" thru_hole roundrect
-      (at -${p.mounting_holes_position} 0 ${p.r - 90})
-      (size ${p.mounting_holes_height+0.3} ${p.mounting_holes_width+0.3})
-      (drill oval ${p.mounting_holes_height} ${p.mounting_holes_width})
+      (at -${p.mounting_holes_position} 0 ${p.r})
+      (size ${p.mounting_holes_height+0.3} ${p.mounting_hole_left_width+0.3})
+      (drill oval ${p.mounting_holes_height} ${p.mounting_hole_left_width})
       (layers "*.Cu" "*.Mask")
       (roundrect_rratio 0)
       (chamfer_ratio 0.2)
       (chamfer top_right top_left)
     )
     (pad "" thru_hole roundrect
-      (at ${p.mounting_holes_position} 0 ${p.r - 90})
-      (size ${p.mounting_holes_height+0.3} ${p.mounting_holes_width+0.3})
-      (drill oval ${p.mounting_holes_height} ${p.mounting_holes_width})
+      (at ${p.mounting_holes_position} 0 ${p.r})
+      (size ${p.mounting_holes_height+0.3} ${p.mounting_hole_right_width+0.3})
+      (drill oval ${p.mounting_holes_height} ${p.mounting_hole_right_width})
       (layers "*.Cu" "*.Mask")
       (roundrect_rratio 0)
       (chamfer_ratio 0.2)
@@ -155,14 +156,14 @@ module.exports = {
     `
     const npth_mp = `
     (pad "" np_thru_hole oval
-      (at -${p.mounting_holes_position} 0 ${p.r - 90})
-      (size ${p.mounting_holes_height} ${p.mounting_holes_width})
-      (drill oval ${p.mounting_holes_height} ${p.mounting_holes_width})
+      (at -${p.mounting_holes_position} 0 ${p.r})
+      (size ${p.mounting_holes_height} ${p.mounting_hole_left_width})
+      (drill oval ${p.mounting_holes_height} ${p.mounting_hole_left_width})
     )    
     (pad "" np_thru_hole oval
-      (at ${p.mounting_holes_position} 0 ${p.r - 90})
-      (size ${p.mounting_holes_height} ${p.mounting_holes_width})
-      (drill oval ${p.mounting_holes_height} ${p.mounting_holes_width})
+      (at ${p.mounting_holes_position} 0 ${p.r})
+      (size ${p.mounting_holes_height} ${p.mounting_hole_right_width})
+      (drill oval ${p.mounting_holes_height} ${p.mounting_hole_right_width})
     )
     `
     const plate_hole = `
