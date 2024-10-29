@@ -530,11 +530,6 @@ pcbs:
         params:
           S1: "{{column_net}}"
           S2: "{{colrow}}"
-          include_plate_hole_marking: true
-          include_plated_mounting_holes: false
-          mounting_holes_position: 3
-          mounting_holes_height: 1
-          mounting_holes_width: 1
         # params: 
         #   from: "{{column_net}}"
         #   to: "{{colrow}}"
