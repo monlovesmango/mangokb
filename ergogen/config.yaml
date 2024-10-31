@@ -17,12 +17,50 @@ units:
   kcoh: 13.8 # key cutout hole height (cherry, choc v2: 14, choc v1: 13.8)
   kcw: 17.5 # keycap width (cherry: 18, choc: 17.5)
   kch: 16.5 # keycap height (cherry: 18, choc: 16.5)
-  pcb_p: 1.4 # pcb padding
+  pcb_p: 1.5 # pcb padding
   pinky_stagger: .2kp
   ring_stagger: .6kp
   middle_stagger: .5kp
   index_stagger: -.5kp
   thumbmatrix_y_shift: -2.5kp
+
+  hand_rotation: 0
+
+  # mounting measures
+  magnet_hole_diam: 3
+  pcb_hold_diam: 5.4
+  top_holes_y_shift: .5kp + .5middle_stagger
+  bottom_holes_y_shift: -.75kp
+  hole5_y_shift: ring_stagger + thumbmatrix_y_shift + kp
+
+  pwr_trace_width: 0.25
+  gnd_trace_width: 0.25
+  signal_trace_width: 0.15
+
+  # Case variables
+  pcb_thickness: 1
+  switch_plate_to_pcb_spacing: 0.9 + 0.1
+  case_wall_thickness: 1.2
+  pcb_to_case_wall_tolerance: 0.25
+  case_between_wall_tolerance: 0.2
+  bottom_plate_thickness: 1
+  top_plate_thickness: 1.2
+  inner_wall_p: 3
+
+  # corner stuff
+  corner_delta_x: 2ks
+  top_corner_delta_y: index_stagger
+  top_corner_slope: top_corner_delta_y / corner_delta_x
+  top_corner_perp_slope: -1 / top_corner_slope
+  top_corner_perp_angle: atan(top_corner_perp_slope)
+  bottom_corner_delta_y: pinky_stagger + thumbmatrix_y_shift
+  # y = slope * (x + padding * cos(atan(perp_slope))) + padding * sin(atan(-1/slope))
+  pcb_outline_middle_number_x_shift: .5ks + (pcb_p - pcb_p * sin(top_corner_perp_angle)) / top_corner_slope + pcb_p * cos(top_corner_perp_angle)
+  pcb_outline_inner_number_y_shift: .5kp + top_corner_slope * (pcb_p + pcb_p * cos(top_corner_perp_angle)) + pcb_p * sin(top_corner_perp_angle)
+  inner_wall_outline_middle_number_x_shift: .5ks + (inner_wall_p - inner_wall_p * sin(top_corner_perp_angle)) / top_corner_slope + inner_wall_p * cos(top_corner_perp_angle)
+  inner_wall_outline_inner_number_y_shift: .5kp + top_corner_slope * (inner_wall_p + inner_wall_p * cos(top_corner_perp_angle)) + inner_wall_p * sin(top_corner_perp_angle)
+
+  # component stuff
   led_pos_x: 0 # Led X position relative to the switch center
   led_pos_y: 4.7 # Led Y position relative to the switch center
   led_pos_y_mcu: 3.4 # Led Y position relative to the switch center under mcu
@@ -38,37 +76,9 @@ units:
   switch_rotation: 180 # Hotswap south, led north
   mcu_pos_x: .47ks - pcb_p
   mcu_pos_y: -1.3
-  trrs_pos_x: -7
-  trrs_pos_y: 12.8 + pcb_p
-  trrs_rotation: -13.5
-
-  hand_rotation: 0
-
-  # mounting measures
-  magnet_hole_diam: 3
-  pcb_hold_diam: 5.4
-  top_holes_y_shift: .5kp + .5middle_stagger
-  bottom_holes_y_shift: -.75kp
-  hole5_y_shift: ring_stagger + thumbmatrix_y_shift + kp
-  screw_radius: 1.1 # M2 screws
-  screw_diameter: screw_radius * 2
-  screw_head_radius: 2.05
-  screw_head_diameter: screw_head_radius * 2
-  spacer_radius: 2.15 # M2 standoffs
-  spacer_diameter: spacer_radius * 2
-  fillet_radius: 0.5
-  pwr_trace_width: 0.25
-  gnd_trace_width: 0.25
-  signal_trace_width: 0.15
-  via_size: 0.56 # JLCPCB min 0.56 | KiCad default 0.8
-  via_drill: 0.3 # JLCPCB min 0.3 | KiCad default 0.4
-
-  # Case variables
-  case_wall_thickness: 1.2
-  pcb_to_case_wall_tolerance: 0.25
-  bottom_plate_thickness: 1.0
-  top_plate_thickness: 1.6
-  internal_distance_between_plates: 4
+  trrs_pos_x: -.33ks
+  trrs_pos_y: 8.3 + (-.5ks + trrs_pos_x - pcb_p) * top_corner_slope + pcb_p * sin(top_corner_perp_angle)
+  trrs_rotation: atan(top_corner_slope) * 360 / (2pi)
 
 points:
   zones:
@@ -297,6 +307,12 @@ points:
       anchor:
         ref: matrix_pinky_bottom
         shift: [0, hole5_y_shift]
+    extra_stabilizer_hole_1:
+      key.tags:
+        - extra_stabilizer_hole
+      anchor:
+        ref: matrix_outer_number
+        shift: [.5ks, .5kp + .5pinky_stagger]
   rotate: hand_rotation
   mirror:
     ref: matrix_inner_number
@@ -362,9 +378,9 @@ outlines:
         - ref: pinkymatrix_outer_pinky1
           shift: [-.5ks-pcb_p, .5kp+pcb_p]
         - ref: matrix_middle_number
-          shift: [.5ks+pcb_p, .5kp+pcb_p]
+          shift: [pcb_outline_middle_number_x_shift, .5kp+pcb_p]
         - ref: matrix_inner_number
-          shift: [.5ks+pcb_p, .5kp+pcb_p]
+          shift: [.5ks+pcb_p, pcb_outline_inner_number_y_shift]
   pcb_right:
     - what: polygon
       operation: stack
@@ -552,8 +568,11 @@ pcbs:
           shift: [.5ks - 1.1, -.5kp + 1.1]
       extra_stablizer_hole:
         what: monlovesmango/pcb_hole
-        where: [[-/mirror/, /outer_number/]]
+        where: [[-/mirror/, "extra_stabilizer_hole"]]
         params:
           diam: 1.6
-        adjust:
-          shift: [.5ks, .5kp + .5pinky_stagger]
+
+# cases:
+#   top_plate:
+#     - what: outline
+#       name: 
