@@ -42,10 +42,10 @@ units:
   switch_plate_to_pcb_spacing: 0.9 + 0.1
   case_wall_thickness: 1.2
   pcb_to_case_wall_tolerance: 0.25
-  case_between_wall_tolerance: 0.2
   bottom_plate_thickness: 1
   top_plate_thickness: 1.2
-  inner_wall_p: 3
+  inner_wall_p: pcb_p + pcb_to_case_wall_tolerance
+  outer_wall_p: inner_wall_p + case_wall_thickness
 
   # corner stuff
   corner_delta_x: 2ks
@@ -53,12 +53,23 @@ units:
   top_corner_slope: top_corner_delta_y / corner_delta_x
   top_corner_perp_slope: -1 / top_corner_slope
   top_corner_perp_angle: atan(top_corner_perp_slope)
-  bottom_corner_delta_y: pinky_stagger + thumbmatrix_y_shift
+  bottom_corner_delta_y: pinky_stagger + ring_stagger + thumbmatrix_y_shift + 1kp
+  bottom_corner_slope: bottom_corner_delta_y / corner_delta_x
+  bottom_corner_perp_slope: -1 / bottom_corner_slope
+  bottom_corner_perp_angle: atan(bottom_corner_perp_slope)
   # y = slope * (x + padding * cos(atan(perp_slope))) + padding * sin(atan(-1/slope))
   pcb_outline_middle_number_x_shift: .5ks + (pcb_p - pcb_p * sin(top_corner_perp_angle)) / top_corner_slope + pcb_p * cos(top_corner_perp_angle)
   pcb_outline_inner_number_y_shift: .5kp + top_corner_slope * (pcb_p + pcb_p * cos(top_corner_perp_angle)) + pcb_p * sin(top_corner_perp_angle)
   inner_wall_outline_middle_number_x_shift: .5ks + (inner_wall_p - inner_wall_p * sin(top_corner_perp_angle)) / top_corner_slope + inner_wall_p * cos(top_corner_perp_angle)
   inner_wall_outline_inner_number_y_shift: .5kp + top_corner_slope * (inner_wall_p + inner_wall_p * cos(top_corner_perp_angle)) + inner_wall_p * sin(top_corner_perp_angle)
+  outer_wall_outline_middle_number_x_shift: .5ks + (outer_wall_p - outer_wall_p * sin(top_corner_perp_angle)) / top_corner_slope + outer_wall_p * cos(top_corner_perp_angle)
+  outer_wall_outline_inner_number_y_shift: .5kp + top_corner_slope * (outer_wall_p + outer_wall_p * cos(top_corner_perp_angle)) + outer_wall_p * sin(top_corner_perp_angle)
+  pcb_outline_ring_thumbR0_x_shift: -(.5ks + (pcb_p - pcb_p * sin(bottom_corner_perp_angle)) / bottom_corner_slope + pcb_p * cos(bottom_corner_perp_angle))
+  pcb_outline_outer_bottom_y_shift: -(.5kp + bottom_corner_slope * (pcb_p + pcb_p * cos(bottom_corner_perp_angle)) + pcb_p * sin(bottom_corner_perp_angle))
+  inner_wall_outline_ring_thumbR0_x_shift: -(.5ks + (inner_wall_p - inner_wall_p * sin(bottom_corner_perp_angle)) / bottom_corner_slope + inner_wall_p * cos(bottom_corner_perp_angle))
+  inner_wall_outline_outer_bottom_y_shift: -(.5kp + bottom_corner_slope * (inner_wall_p + inner_wall_p * cos(bottom_corner_perp_angle)) + inner_wall_p * sin(bottom_corner_perp_angle))
+  outer_wall_outline_ring_thumbR0_x_shift: -(.5ks + (outer_wall_p - outer_wall_p * sin(bottom_corner_perp_angle)) / bottom_corner_slope + outer_wall_p * cos(bottom_corner_perp_angle))
+  outer_wall_outline_outer_bottom_y_shift: -(.5kp + bottom_corner_slope * (outer_wall_p + outer_wall_p * cos(bottom_corner_perp_angle)) + outer_wall_p * sin(bottom_corner_perp_angle))
 
   # component stuff
   led_pos_x: 0 # Led X position relative to the switch center
@@ -372,9 +383,9 @@ outlines:
         - ref: thumbmatrix_inner_thumbR0
           shift: [.5ks+pcb_p, -.75kp-pcb_p]
         - ref: thumbmatrix_ring_thumbR0
-          shift: [-.5ks-pcb_p, -.5kp-pcb_p]
+          shift: [pcb_outline_ring_thumbR0_x_shift, -.5kp-pcb_p]
         - ref: matrix_outer_bottom
-          shift: [-.5ks-pcb_p, -.5kp-pcb_p]
+          shift: [-.5ks-pcb_p, pcb_outline_outer_bottom_y_shift]
         - ref: pinkymatrix_outer_pinky1
           shift: [-.5ks-pcb_p, .5kp+pcb_p]
         - ref: matrix_middle_number
@@ -397,21 +408,56 @@ outlines:
           shift: [.5ks+pcb_p, .5kp+pcb_p]
         - ref: mirror_matrix_inner_number
           shift: [.5ks+pcb_p, .5kp+pcb_p]
+  case_inner_wall_left:
+    - what: polygon
+      operation: stack
+      points:
+        - ref: thumbmatrix_inner_thumbR0
+          shift: [.5ks+inner_wall_p, -.75kp-inner_wall_p]
+        - ref: thumbmatrix_ring_thumbR0
+          shift: [inner_wall_outline_ring_thumbR0_x_shift, -.5kp-inner_wall_p]
+        - ref: matrix_outer_bottom
+          shift: [-.5ks-inner_wall_p, inner_wall_outline_outer_bottom_y_shift]
+        - ref: pinkymatrix_outer_pinky1
+          shift: [-.5ks-inner_wall_p, .5kp+inner_wall_p]
+        - ref: matrix_middle_number
+          shift: [inner_wall_outline_middle_number_x_shift, .5kp+inner_wall_p]
+        - ref: matrix_inner_number
+          shift: [.5ks+inner_wall_p, inner_wall_outline_inner_number_y_shift]
+  case_outer_wall_left:
+    - what: polygon
+      operation: stack
+      points:
+        - ref: thumbmatrix_inner_thumbR0
+          shift: [.5ks+outer_wall_p, -.75kp-outer_wall_p]
+        - ref: thumbmatrix_ring_thumbR0
+          shift: [outer_wall_outline_ring_thumbR0_x_shift, -.5kp-outer_wall_p]
+        - ref: matrix_outer_bottom
+          shift: [-.5ks-outer_wall_p, outer_wall_outline_outer_bottom_y_shift]
+        - ref: pinkymatrix_outer_pinky1
+          shift: [-.5ks-outer_wall_p, .5kp+outer_wall_p]
+        - ref: matrix_middle_number
+          shift: [outer_wall_outline_middle_number_x_shift, .5kp+outer_wall_p]
+        - ref: matrix_inner_number
+          shift: [.5ks+outer_wall_p, outer_wall_outline_inner_number_y_shift]
   pcb:
     - name: pcb_left
     - operation: add
       name: pcb_right
   combo:
-    - name: pcb
-    - operation: subtract
-      name: keycap_outlines
+    - name: pcb_left
+    - operation: stack
+      name: case_outer_wall_left
+    - operation: stack
+      name: case_inner_wall_left
 
 pcbs:
   left:
     template: kicad8
     outlines:
       main:
-        outline: pcb_left
+        outline: combo
+        # outline: pcb_left
     footprints:
       choc_hotswap:
         what: choc
