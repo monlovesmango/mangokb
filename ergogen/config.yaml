@@ -330,40 +330,7 @@ points:
     distance: 2ks
 
 outlines:
-  debug_points:
-    - what: rectangle
-      where: true
-      size: [6,0.01]
-    - what: rectangle
-      where: true
-      size: [0.01,4]
-    - what: circle
-      where: true
-      radius: 0.4
-      adjust:
-        shift: [3,0]
-    - what: circle
-      where: true
-      radius: 0.4
-      adjust:
-        shift: [0,2]
-    - what: rectangle
-      where: [key]
-      size: [kx, ky]
-      operation: stack
-    - what: rectangle
-      where: [key_1_5u]
-      size: [kx, 1.5ky]
-      operation: stack
-    - what: rectangle
-      where: /key/
-      size: [kcow, kcoh]
-      operation: stack
-    - what: circle
-      where: [screw]
-      radius: 2
-      operation: stack
-  keycap_outlines:
+  _keycap_outlines:
     - what: rectangle
       fillet: 2
       where: [key_1u]
@@ -372,7 +339,7 @@ outlines:
       fillet: 2
       where: [key_1_5u]
       size: [kcw, 1.5kch]
-  key_switch_cutouts:
+  _key_switch_cutouts:
     - what: rectangle
       where: [key]
       size: [kcow, kcoh]
@@ -399,16 +366,16 @@ outlines:
         - ref: mirror_thumbmatrix_inner_thumbR0
           shift: [.5ks+pcb_p, -.75kp-pcb_p]
         - ref: mirror_thumbmatrix_ring_thumbR0
-          shift: [-.5ks-pcb_p, -.5kp-pcb_p]
+          shift: [pcb_outline_ring_thumbR0_x_shift, -.5kp-pcb_p]
         - ref: mirror_matrix_outer_bottom
-          shift: [-.5ks-pcb_p, -.5kp-pcb_p]
+          shift: [-.5ks-pcb_p, pcb_outline_outer_bottom_y_shift]
         - ref: mirror_pinkymatrix_outer_pinky1
           shift: [-.5ks-pcb_p, .5kp+pcb_p]
         - ref: mirror_matrix_middle_number
-          shift: [.5ks+pcb_p, .5kp+pcb_p]
+          shift: [pcb_outline_middle_number_x_shift, .5kp+pcb_p]
         - ref: mirror_matrix_inner_number
-          shift: [.5ks+pcb_p, .5kp+pcb_p]
-  case_inner_wall_left:
+          shift: [.5ks+pcb_p, pcb_outline_inner_number_y_shift]
+  _case_inner_wall_left:
     - what: polygon
       operation: stack
       points:
@@ -424,7 +391,23 @@ outlines:
           shift: [inner_wall_outline_middle_number_x_shift, .5kp+inner_wall_p]
         - ref: matrix_inner_number
           shift: [.5ks+inner_wall_p, inner_wall_outline_inner_number_y_shift]
-  case_outer_wall_left:
+  _case_inner_wall_right:
+    - what: polygon
+      operation: stack
+      points:
+        - ref: mirror_thumbmatrix_inner_thumbR0
+          shift: [.5ks+inner_wall_p, -.75kp-inner_wall_p]
+        - ref: mirror_thumbmatrix_ring_thumbR0
+          shift: [inner_wall_outline_ring_thumbR0_x_shift, -.5kp-inner_wall_p]
+        - ref: mirror_matrix_outer_bottom
+          shift: [-.5ks-inner_wall_p, inner_wall_outline_outer_bottom_y_shift]
+        - ref: mirror_pinkymatrix_outer_pinky1
+          shift: [-.5ks-inner_wall_p, .5kp+inner_wall_p]
+        - ref: mirror_matrix_middle_number
+          shift: [inner_wall_outline_middle_number_x_shift, .5kp+inner_wall_p]
+        - ref: mirror_matrix_inner_number
+          shift: [.5ks+inner_wall_p, inner_wall_outline_inner_number_y_shift]
+  _case_outer_wall_left:
     - what: polygon
       operation: stack
       points:
@@ -440,24 +423,42 @@ outlines:
           shift: [outer_wall_outline_middle_number_x_shift, .5kp+outer_wall_p]
         - ref: matrix_inner_number
           shift: [.5ks+outer_wall_p, outer_wall_outline_inner_number_y_shift]
-  pcb:
+  _case_outer_wall_right:
+    - what: polygon
+      operation: stack
+      points:
+        - ref: mirror_thumbmatrix_inner_thumbR0
+          shift: [.5ks+outer_wall_p, -.75kp-outer_wall_p]
+        - ref: mirror_thumbmatrix_ring_thumbR0
+          shift: [outer_wall_outline_ring_thumbR0_x_shift, -.5kp-outer_wall_p]
+        - ref: mirror_matrix_outer_bottom
+          shift: [-.5ks-outer_wall_p, outer_wall_outline_outer_bottom_y_shift]
+        - ref: mirror_pinkymatrix_outer_pinky1
+          shift: [-.5ks-outer_wall_p, .5kp+outer_wall_p]
+        - ref: mirror_matrix_middle_number
+          shift: [outer_wall_outline_middle_number_x_shift, .5kp+outer_wall_p]
+        - ref: mirror_matrix_inner_number
+          shift: [.5ks+outer_wall_p, outer_wall_outline_inner_number_y_shift]
+  _combo:
     - name: pcb_left
-    - operation: add
+    - operation: stack
+      name: _case_outer_wall_left
+    - operation: stack
+      name: _case_inner_wall_left
+    - operation: stack
       name: pcb_right
-  combo:
-    - name: pcb_left
     - operation: stack
-      name: case_outer_wall_left
+      name: _case_outer_wall_right
     - operation: stack
-      name: case_inner_wall_left
+      name: _case_inner_wall_right
 
 pcbs:
   left:
     template: kicad8
     outlines:
       main:
-        outline: combo
-        # outline: pcb_left
+        # outline: combo
+        outline: pcb_left
     footprints:
       choc_hotswap:
         what: choc
