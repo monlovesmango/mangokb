@@ -42,10 +42,12 @@ units:
   switch_plate_to_pcb_spacing: 0.9 + 0.1
   case_wall_thickness: 1.2
   pcb_to_case_wall_tolerance: 0.25
-  bottom_plate_thickness: 1
   top_plate_thickness: 1.2
+  bottom_plate_thickness: 1
   inner_wall_p: pcb_p + pcb_to_case_wall_tolerance
   outer_wall_p: inner_wall_p + case_wall_thickness
+  insert_height: 6
+  wall_height: pcb_thickness + switch_plate_to_pcb_spacing + insert_height
   key_stabilizer_support_diam: 2
   magnet_diam: 3
   magnet_housing_hole_diam: magnet_diam + .3
@@ -498,6 +500,12 @@ outlines:
       name: _magnet_stabilizer_supports
     - operation: stack
       name: _magnet_housing_holes
+  _case_supports:
+    - name: _case_wall
+    - operation: add
+      name: _key_stabilizer_supports
+    - operation: add
+      name: _magnet_stabilizer_supports
 
 pcbs:
   left:
@@ -666,7 +674,40 @@ pcbs:
         params:
           diam: key_stabilizer_support_diam + .15
 
-# cases:
-#   top_plate:
-#     - what: outline
-#       name: 
+cases:
+  top:
+    - what: outline
+      name: _case_top_plate
+      extrude: top_plate_thickness
+      shift: [0, 0, wall_height / 2]
+    - what: outline
+      name: _case_supports
+      extrude: wall_height / 2
+      operation: add
+    - what: outline
+      name: _magnet_housing_holes
+      extrude: 1
+      operation: subtract
+  bottom:
+    - what: outline
+      name: _case_bottom_plate
+      extrude: bottom_plate_thickness
+    - what: outline
+      name: _case_supports
+      extrude: wall_height / 2
+      shift: [0, 0, bottom_plate_thickness]
+      operation: add
+    - what: outline
+      name: _magnet_housing_holes
+      extrude: 1
+      shift: [0, 0, bottom_plate_thickness + wall_height / 2 - 1]
+      operation: subtract
+  # insert:
+  #   - what: outline
+  #     name: 
+  combo:
+    - what: case
+      name: bottom
+    - what: case
+      name: top
+      shift: [0, 0, wall_height * 2]
