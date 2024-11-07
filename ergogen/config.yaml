@@ -49,6 +49,8 @@ units:
   insert_height: 6
   wall_height: pcb_thickness + switch_plate_to_pcb_spacing + insert_height
   key_stabilizer_support_diam: 2
+  key_stabilizer_support_x_shift: .5ks - 3
+  key_stabilizer_support_y_shift: -.5kp
   magnet_diam: 3
   magnet_housing_hole_diam: magnet_diam + .3
   magnet_housing_wall_thickness: 1
@@ -462,7 +464,7 @@ outlines:
       radius: key_stabilizer_support_diam / 2
       where: [[-/mirror/, /number/, -/inner/],[-/mirror/, /top/, -/inner/],[-/mirror/, /home/, -/inner/],[-/mirror/, /middle_bottom/]]
       adjust:
-        shift: [.5ks - 1.1, -.5kp]
+        shift: [key_stabilizer_support_x_shift, key_stabilizer_support_y_shift]
     - what: circle
       radius: key_stabilizer_support_diam / 2
       where: [[-/mirror/, "extra_stabilizer_hole"]]
@@ -474,6 +476,12 @@ outlines:
     - what: circle
       radius: magnet_housing_hole_diam / 2
       where: [[-/mirror/, "magnet_hole"]]
+  _case_supports:
+    - name: _case_wall
+    - operation: add
+      name: _key_stabilizer_supports
+    - operation: add
+      name: _magnet_stabilizer_supports
 
   
   _combo:
@@ -500,12 +508,6 @@ outlines:
       name: _magnet_stabilizer_supports
     - operation: stack
       name: _magnet_housing_holes
-  _case_supports:
-    - name: _case_wall
-    - operation: add
-      name: _key_stabilizer_supports
-    - operation: add
-      name: _magnet_stabilizer_supports
 
 pcbs:
   left:
@@ -667,7 +669,7 @@ pcbs:
         params:
           diam: key_stabilizer_support_diam + .15
         adjust:
-          shift: [.5ks - 1.1, -.5kp]
+          shift: [key_stabilizer_support_x_shift, key_stabilizer_support_y_shift]
       extra_stablizer_hole:
         what: monlovesmango/pcb_hole
         where: [[-/mirror/, "extra_stabilizer_hole"]]
