@@ -26,17 +26,6 @@ units:
 
   hand_rotation: 0
 
-  # mounting measures
-  magnet_hole_diam: 3
-  pcb_hold_diam: 5.4
-  top_holes_y_shift: .5kp + .5middle_stagger
-  bottom_holes_y_shift: -.75kp
-  hole5_y_shift: ring_stagger + thumbmatrix_y_shift + kp
-
-  pwr_trace_width: 0.25
-  gnd_trace_width: 0.25
-  signal_trace_width: 0.15
-
   # Case variables
   pcb_thickness: 1
   switch_plate_to_pcb_spacing: 0.9 + 0.1
@@ -46,15 +35,25 @@ units:
   bottom_plate_thickness: 1
   inner_wall_p: pcb_p + pcb_to_case_wall_tolerance
   outer_wall_p: inner_wall_p + case_wall_thickness
+  insert_inner_wall_p: pcb_p - 1.2
   insert_height: 6
   wall_height: pcb_thickness + switch_plate_to_pcb_spacing + insert_height
   key_stabilizer_support_diam: 2
-  key_stabilizer_support_x_shift: .5ks - 3
+  key_stabilizer_support_x_shift: .5ks - .65key_stabilizer_support_diam - case_wall_thickness - .1
   key_stabilizer_support_y_shift: -.5kp
   magnet_diam: 3
   magnet_housing_hole_diam: magnet_diam + .3
   magnet_housing_wall_thickness: 1
   magnet_stabilizer_support_diam: magnet_housing_hole_diam + 2 * magnet_housing_wall_thickness
+
+  # mounting measures
+  top_index_hole_y_shift: .5kp + .3middle_stagger
+  top_ring_hole_y_shift: .5kp + .5middle_stagger
+  bottom_holes_y_shift: -.75kp
+  hole5_y_shift: ring_stagger + thumbmatrix_y_shift + kp
+  pwr_trace_width: 0.25
+  gnd_trace_width: 0.25
+  signal_trace_width: 0.15
 
 
   # corner stuff
@@ -74,12 +73,16 @@ units:
   inner_wall_outline_inner_number_y_shift: .5kp + top_corner_slope * (inner_wall_p + inner_wall_p * cos(top_corner_perp_angle)) + inner_wall_p * sin(top_corner_perp_angle)
   outer_wall_outline_middle_number_x_shift: .5ks + (outer_wall_p - outer_wall_p * sin(top_corner_perp_angle)) / top_corner_slope + outer_wall_p * cos(top_corner_perp_angle)
   outer_wall_outline_inner_number_y_shift: .5kp + top_corner_slope * (outer_wall_p + outer_wall_p * cos(top_corner_perp_angle)) + outer_wall_p * sin(top_corner_perp_angle)
+  insert_inner_wall_outline_middle_number_x_shift: .5ks + (insert_inner_wall_p - insert_inner_wall_p * sin(top_corner_perp_angle)) / top_corner_slope + insert_inner_wall_p * cos(top_corner_perp_angle)
+  insert_inner_wall_outline_inner_number_y_shift: .5kp + top_corner_slope * (insert_inner_wall_p + insert_inner_wall_p * cos(top_corner_perp_angle)) + insert_inner_wall_p * sin(top_corner_perp_angle)
   pcb_outline_ring_thumbR0_x_shift: -(.5ks + (pcb_p - pcb_p * sin(bottom_corner_perp_angle)) / bottom_corner_slope + pcb_p * cos(bottom_corner_perp_angle))
   pcb_outline_outer_bottom_y_shift: -(.5kp + bottom_corner_slope * (pcb_p + pcb_p * cos(bottom_corner_perp_angle)) + pcb_p * sin(bottom_corner_perp_angle))
   inner_wall_outline_ring_thumbR0_x_shift: -(.5ks + (inner_wall_p - inner_wall_p * sin(bottom_corner_perp_angle)) / bottom_corner_slope + inner_wall_p * cos(bottom_corner_perp_angle))
   inner_wall_outline_outer_bottom_y_shift: -(.5kp + bottom_corner_slope * (inner_wall_p + inner_wall_p * cos(bottom_corner_perp_angle)) + inner_wall_p * sin(bottom_corner_perp_angle))
   outer_wall_outline_ring_thumbR0_x_shift: -(.5ks + (outer_wall_p - outer_wall_p * sin(bottom_corner_perp_angle)) / bottom_corner_slope + outer_wall_p * cos(bottom_corner_perp_angle))
   outer_wall_outline_outer_bottom_y_shift: -(.5kp + bottom_corner_slope * (outer_wall_p + outer_wall_p * cos(bottom_corner_perp_angle)) + outer_wall_p * sin(bottom_corner_perp_angle))
+  insert_inner_wall_outline_ring_thumbR0_x_shift: -(.5ks + (insert_inner_wall_p - insert_inner_wall_p * sin(bottom_corner_perp_angle)) / bottom_corner_slope + insert_inner_wall_p * cos(bottom_corner_perp_angle))
+  insert_inner_wall_outline_outer_bottom_y_shift: -(.5kp + bottom_corner_slope * (insert_inner_wall_p + insert_inner_wall_p * cos(bottom_corner_perp_angle)) + insert_inner_wall_p * sin(bottom_corner_perp_angle))
 
   # component stuff
   led_pos_x: 0 # Led X position relative to the switch center
@@ -303,13 +306,13 @@ points:
         - magnet_hole
       anchor:
         ref: matrix_ring_number
-        shift: [0, top_holes_y_shift]
+        shift: [0, top_ring_hole_y_shift]
     hole_2:
       key.tags: 
         - magnet_hole
       anchor:
         ref: matrix_index_number
-        shift: [0, top_holes_y_shift - .5]
+        shift: [0, top_index_hole_y_shift]
     hole_3:
       key.tags: 
         - magnet_hole
@@ -449,6 +452,22 @@ outlines:
           shift: [outer_wall_outline_middle_number_x_shift, .5kp+outer_wall_p]
         - ref: mirror_matrix_inner_number
           shift: [.5ks+outer_wall_p, outer_wall_outline_inner_number_y_shift]
+  _case_insert_inner_wall_left:
+    - what: polygon
+      operation: stack
+      points:
+        - ref: thumbmatrix_inner_thumbR0
+          shift: [.5ks+insert_inner_wall_p, -.75kp-insert_inner_wall_p]
+        - ref: thumbmatrix_ring_thumbR0
+          shift: [insert_inner_wall_outline_ring_thumbR0_x_shift, -.5kp-insert_inner_wall_p]
+        - ref: matrix_outer_bottom
+          shift: [-.5ks-insert_inner_wall_p, insert_inner_wall_outline_outer_bottom_y_shift]
+        - ref: pinkymatrix_outer_pinky1
+          shift: [-.5ks-insert_inner_wall_p, .5kp+insert_inner_wall_p]
+        - ref: matrix_middle_number
+          shift: [insert_inner_wall_outline_middle_number_x_shift, .5kp+insert_inner_wall_p]
+        - ref: matrix_inner_number
+          shift: [.5ks+insert_inner_wall_p, insert_inner_wall_outline_inner_number_y_shift]
   _case_top_plate:
     - name: _case_outer_wall_left
     - operation: subtract
@@ -482,7 +501,93 @@ outlines:
       name: _key_stabilizer_supports
     - operation: add
       name: _magnet_stabilizer_supports
-
+  _case_insert_wall:
+    - name: pcb_left
+    - operation: subtract
+      name: _case_insert_inner_wall_left
+  _case_insert_magnet_hole_supports:
+    - what: circle
+      radius: magnet_stabilizer_support_diam / 2 + case_wall_thickness + .1
+      where: [[-/mirror/, "magnet_hole"]]
+    - operation: subtract
+      what: circle
+      radius: magnet_stabilizer_support_diam / 2 + .1
+      where: [[-/mirror/, "magnet_hole"]]
+  _case_insert_stabilizer_hole_supports:
+    - what: circle
+      radius: key_stabilizer_support_diam / 2 + case_wall_thickness + .1
+      where: [[-/mirror/, /number/, -/inner/],[-/mirror/, /top/, -/inner/],[-/mirror/, /home/, -/inner/],[-/mirror/, /middle_bottom/]]
+      adjust:
+        shift: [key_stabilizer_support_x_shift, key_stabilizer_support_y_shift]
+    - what: rectangle
+      size: [ks, case_wall_thickness]
+      where: [[-/mirror/, /number/, -/inner/],[-/mirror/, /top/, -/inner/],[-/mirror/, /home/, -/inner/],[-/mirror/, /middle_bottom/]]
+      adjust:
+        shift: [key_stabilizer_support_x_shift - .5ks + 1.2, key_stabilizer_support_y_shift]
+    - what: rectangle
+      size: [case_wall_thickness, 2kp]
+      where: [[-/mirror/, /number/, -/inner/],[-/mirror/, /top/, -/inner/],[-/mirror/, /home/, -/inner/],[-/mirror/, /middle_bottom/]]
+      adjust:
+        shift: [.5kcow + .5case_wall_thickness, key_stabilizer_support_y_shift + 1]
+    - what: rectangle
+      size: [case_wall_thickness, 2kp]
+      where: [[-/mirror/, /thumbmatrix_ring/],[-/mirror/, /thumbmatrix_index/], [-/mirror/, /R5/]]
+      adjust:
+        shift: [.5kcow + .5case_wall_thickness, .5kp - 1]
+    - what: rectangle
+      size: [ks + 1, case_wall_thickness]
+      where: [[-/mirror/, /inner/]]
+      adjust:
+        shift: [0, key_stabilizer_support_y_shift]
+    - what: rectangle
+      size: [case_wall_thickness, kp + 2]
+      where: [[-/mirror/, /pinky_number/]]
+      adjust:
+        shift: [.5kcow + .5case_wall_thickness, .5kp + ring_stagger]
+    - what: rectangle
+      size: [case_wall_thickness, kp + 2]
+      where: [[-/mirror/, /ring_number/]]
+      adjust:
+        shift: [.5kcow + .5case_wall_thickness, middle_stagger]
+    - what: rectangle
+      size: [case_wall_thickness, .5kp]
+      where: [[-/mirror/, /outer_bottom/]]
+      adjust:
+        shift: [.5kcow + .5case_wall_thickness, -.6kp]
+    - what: rectangle
+      size: [case_wall_thickness, kp]
+      where: [[-/mirror/, /pinky_bottom/]]
+      adjust:
+        shift: [.5kcow + .5case_wall_thickness, hole5_y_shift]
+    - operation: subtract
+      what: circle
+      radius: key_stabilizer_support_diam / 2 + .1
+      where: [[-/mirror/, /number/, -/inner/],[-/mirror/, /top/, -/inner/],[-/mirror/, /home/, -/inner/],[-/mirror/, /middle_bottom/]]
+      adjust:
+        shift: [key_stabilizer_support_x_shift, key_stabilizer_support_y_shift]
+    - what: circle
+      radius: key_stabilizer_support_diam / 2 + case_wall_thickness + .1
+      where: [[-/mirror/, "extra_stabilizer_hole"]]
+    - what: rectangle
+      size: [case_wall_thickness, key_stabilizer_support_diam + 2case_wall_thickness]
+      where: [[-/mirror/, /outer_number/]]
+      adjust:
+        shift: [.5kcow + .5case_wall_thickness, .5kp + .5pinky_stagger]
+    - what: rectangle
+      size: [2ks, case_wall_thickness]
+      where: [[-/mirror/, "extra_stabilizer_hole"]]
+      adjust:
+        shift: [-case_wall_thickness, key_stabilizer_support_diam / 2 + .5case_wall_thickness + .1]
+    - operation: subtract
+      what: circle
+      radius: magnet_stabilizer_support_diam / 2 + .1
+      where: [[-/mirror/, "magnet_hole"]]
+  _case_insert:
+    - name: _case_insert_wall
+    - operation: add
+      name: _case_insert_magnet_hole_supports
+    - operation: add
+      name: _case_insert_stabilizer_hole_supports
   
   _combo:
     - name: pcb_left
@@ -498,7 +603,7 @@ outlines:
       name: _case_inner_wall_right
     - operation: stack
       name: _keycap_outlines
-  _case_outlines:
+  case_outlines:
     - name: _case_top_plate
     - operation: stack
       name: _case_wall
@@ -508,6 +613,8 @@ outlines:
       name: _magnet_stabilizer_supports
     - operation: stack
       name: _magnet_housing_holes
+    - operation: stack
+      name: _case_insert
 
 pcbs:
   left:
