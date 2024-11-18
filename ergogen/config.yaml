@@ -47,8 +47,8 @@ units:
   magnet_stabilizer_support_diam: magnet_housing_hole_diam + 2 * magnet_housing_wall_thickness
 
   # mounting measures
-  top_index_hole_y_shift: .5kp + .3middle_stagger
-  top_ring_hole_y_shift: .5kp + .5middle_stagger
+  hole1_y_shift: .5kp + .5middle_stagger
+  hole2_y_shift: .5kp + .3middle_stagger
   bottom_holes_y_shift: -.75kp
   hole5_y_shift: ring_stagger + thumbmatrix_y_shift + kp
   pwr_trace_width: 0.25
@@ -306,13 +306,13 @@ points:
         - magnet_hole
       anchor:
         ref: matrix_ring_number
-        shift: [0, top_ring_hole_y_shift]
+        shift: [0, hole1_y_shift]
     hole_2:
       key.tags: 
         - magnet_hole
       anchor:
         ref: matrix_index_number
-        shift: [0, top_index_hole_y_shift]
+        shift: [0, hole2_y_shift]
     hole_3:
       key.tags: 
         - magnet_hole
@@ -509,6 +509,23 @@ outlines:
     - what: circle
       radius: magnet_stabilizer_support_diam / 2 + case_wall_thickness + .1
       where: [[-/mirror/, "magnet_hole"]]
+    - what: rectangle
+      size: [ks, magnet_stabilizer_support_diam + 4 case_wall_thickness + .2]
+      where: [[hole_1],[hole_3],[hole_4]]
+      adjust:
+        shift: [-2, 0]
+    - what: rectangle
+      size: [ks, kp]
+      where: [[hole_2]]
+      adjust:
+        shift: [-2, kp -hole2_y_shift - case_wall_thickness -.5]
+    - what: rectangle
+      size: [ks, kp]
+      where: [[hole_5]]
+      adjust:
+        shift: [-2, .7kp +hole5_y_shift ]
+    - operation: intersect
+      name: pcb_left
     - operation: subtract
       what: circle
       radius: magnet_stabilizer_support_diam / 2 + .1
@@ -535,8 +552,8 @@ outlines:
       adjust:
         shift: [.5kcow + .5case_wall_thickness, .5kp - 1]
     - what: rectangle
-      size: [ks + 1, case_wall_thickness]
-      where: [[-/mirror/, /inner/]]
+      size: [ks + 3, case_wall_thickness]
+      where: [[-/mirror/, /inner/, -/thumbmatrix/]]
       adjust:
         shift: [0, key_stabilizer_support_y_shift]
     - what: rectangle
@@ -621,8 +638,8 @@ pcbs:
     template: kicad8
     outlines:
       main:
-        # outline: combo
-        outline: pcb_left
+        outline: case_outlines
+        # outline: pcb_left
     footprints:
       choc_hotswap:
         what: choc
